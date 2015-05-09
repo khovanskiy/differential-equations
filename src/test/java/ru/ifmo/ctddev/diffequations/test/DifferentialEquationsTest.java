@@ -1,12 +1,13 @@
 package ru.ifmo.ctddev.diffequations.test;
 
+import org.junit.Test;
 import ru.ifmo.ctddev.diffequations.DifferentialEquationSystem;
 import ru.ifmo.ctddev.diffequations.Function;
 import ru.ifmo.ctddev.diffequations.RandomHolder;
 
 import java.util.Random;
 
-public class Test {
+public class DifferentialEquationsTest {
 
     public static void runSimpleTest() {
         Function[] functions = new Function[2];
@@ -64,7 +65,7 @@ public class Test {
         System.out.println(result[iterations - 1][0] + " " + result[iterations - 1][1] + " " + result[iterations - 1][2]);
     }
 
-    public static double[][] getRBSigma(final double r, final double b, final double sigma, double dt, int iterations) {
+    public static void getRBSigma(final double r, final double b, final double sigma, double dt, int iterations) {
         Random random = RandomHolder.random;
         double[] x0 = new double[]{random.nextDouble(), random.nextDouble(), random.nextDouble(), 0};
         Function[] functions = new Function[3];
@@ -87,7 +88,7 @@ public class Test {
             }
         };
         DifferentialEquationSystem differentialEquationSystem = new DifferentialEquationSystem(functions);
-        return differentialEquationSystem.solve(DifferentialEquationSystem.Method.ExplicitEuler,
+        differentialEquationSystem.solve(DifferentialEquationSystem.Method.ExplicitEuler,
                 x0, dt, iterations);
     }
 }
