@@ -1,5 +1,7 @@
 package ru.ifmo.ctddev.diffequations;
 
+import java.util.Arrays;
+
 public class EquationSystem {
 
     private final static double GRADIENT_DESCENT_PRECISION = 1e-6;
@@ -143,7 +145,7 @@ public class EquationSystem {
      * @return argument x, discrepancy(x) < eps
      */
     public double[] universalMethod(double[] x0, double eps, long maxIterations) {
-        double[] x = x0.clone();
+        double[] x = Arrays.copyOf(x0, x0.length);
         for (int q = 0; q < maxIterations; q++) {
             double[] dx = linearDerivativeSolution(x);
             double k = localMinimum(x, dx);

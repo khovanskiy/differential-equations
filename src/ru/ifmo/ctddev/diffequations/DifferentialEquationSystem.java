@@ -1,5 +1,7 @@
 package ru.ifmo.ctddev.diffequations;
 
+import java.util.Arrays;
+
 public class DifferentialEquationSystem {
     private static final double EPS = 1e-6;
     private static final long MAX_ITERATIONS = 1000;
@@ -70,7 +72,7 @@ public class DifferentialEquationSystem {
 
     private double[][] explicitEulerMethod(final double[] x0, final double dt, final int iterations) {
         double[][] result = new double[iterations][n];
-        double[] x = x0.clone();
+        double[] x = Arrays.copyOf(x0, x0.length);
         double[] dx = new double[n];
         for (int i = 0; i < iterations; i++) {
             for (int j = 0; j < n; j++) {
@@ -87,7 +89,7 @@ public class DifferentialEquationSystem {
 
     private double[][] implicitEulerMethod(final double[] x0, final double dt, final int iterations) {
         double[][] result = new double[iterations][n];
-        final double[] x = x0.clone();
+        final double[] x = Arrays.copyOf(x0, x0.length);
         double[] dx = new double[n];
         for (int i = 0; i < iterations; i++) {
             for (int j = 0; j < n; j++) {
@@ -122,9 +124,9 @@ public class DifferentialEquationSystem {
 
     private double[][] explicitRungeKuttaMethod(final double[] x0, final double dt, final int iterations) {
         double[][] result = new double[iterations][n];
-        double[] x = x0.clone();
+        double[] x = Arrays.copyOf(x0, x0.length);
         double[][] k = new double[4][n];
-        double[] tmp = x0.clone();
+        double[] tmp = Arrays.copyOf(x0, x0.length);
         for (int i = 0; i < iterations; i++) {
             for (int j = 0; j < n; j++) {
                 k[0][j] = functions[j].calculate(x);
@@ -165,7 +167,7 @@ public class DifferentialEquationSystem {
         } else {
             double[][] result = new double[iterations][n];
             double[][] tmp = new double[4][n + 1];
-            tmp[0] = x0.clone();
+            tmp[0] = Arrays.copyOf(x0, x0.length);
             double[][] firstRes = explicitRungeKuttaMethod(x0, dt, 3);
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < n; j++) {
