@@ -52,13 +52,15 @@ public class GUIMain extends Application {
     private double r = 24;
     private double b = 8.0 / 3.0;
     private double sigma = 10;
-    private double dt = 1e-4;
+    private double dt = 1e-3;
+    private DifferentialEquationSystem.Method method = DifferentialEquationSystem.Method.ExplicitEuler;
 
     public static void main(String[] args) {
         Application.launch(args);
     }
 
-    public static double[][] solveSystem(final double r, final double b, final double sigma, double dt, int iterations) {
+    public static double[][] solveSystem(DifferentialEquationSystem.Method method,
+            final double r, final double b, final double sigma, double dt, int iterations) {
         Random random = RandomHolder.random;
         double[] x0 = new double[]{random.nextDouble(), random.nextDouble(), random.nextDouble(), 0};
         Function[] functions = new Function[3];
@@ -81,8 +83,7 @@ public class GUIMain extends Application {
             }
         };
         DifferentialEquationSystem differentialEquationSystem = new DifferentialEquationSystem(functions);
-        return differentialEquationSystem.solve(DifferentialEquationSystem.Method.ExplicitRungeKutta,
-                x0, dt, iterations);
+        return differentialEquationSystem.solve(method, x0, dt, iterations);
     }
 
     @Override
@@ -114,7 +115,7 @@ public class GUIMain extends Application {
             this.points = this.iterations;
         }
         System.out.println("Solving...");
-        double[][] v = solveSystem(r, b, sigma, dt, iterations);
+        double[][] v = solveSystem(method, r, b, sigma, dt, iterations);
         Coord3d[] points = new Coord3d[this.points];
         int step = iterations / this.points;
         for (int i = 0, j = 0; i < points.length && j < v.length; ++i, j += step) {
@@ -136,7 +137,7 @@ public class GUIMain extends Application {
                 canvas.getChildren().clear();
                 canvas.getChildren().add(imageView);
 
-                System.out.println("Graph has benn updated.");
+                System.out.println("Graph has been updated.");
             }
         });
     }
@@ -178,6 +179,31 @@ public class GUIMain extends Application {
                         dt = Double.parseDouble(args[2]);
                     }
                     break;
+                    case "method": {
+                        switch (args[2].toLowerCase()) {
+                            case "expliciteuler":
+                            case "explicit_euler": {
+                                method = DifferentialEquationSystem.Method.ExplicitEuler;
+                            }
+                            break;
+                            case "impliciteuler":
+                            case "implicit_euler": {
+                                method = DifferentialEquationSystem.Method.ImplicitEuler;
+                            }
+                            break;
+                            case "explicitrungekutta":
+                            case "explicit_runge_kutta": {
+                                method = DifferentialEquationSystem.Method.ExplicitRungeKutta;
+                            }
+                            break;
+                            case "explicitadamsbashfort":
+                            case "explicit_adams_bashfort": {
+                                method = DifferentialEquationSystem.Method.ExplicitAdamsBashfort;
+                            }
+                            break;
+                        }
+                    }
+                    break;
                 }
                 update();
             }
@@ -190,6 +216,7 @@ public class GUIMain extends Application {
                 System.out.println("dt = " + dt);
                 System.out.println("Iterations = " + iterations);
                 System.out.println("Points = " + points);
+                System.out.println("Method = " + method.toString());
             }
             break;
             case "render":
