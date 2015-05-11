@@ -8,6 +8,7 @@ public class Matrix {
     private int n;
     private double[][] a;
     private double norm = -1;
+
     public Matrix(int size) {
         n = size;
         a = new double[n][n];

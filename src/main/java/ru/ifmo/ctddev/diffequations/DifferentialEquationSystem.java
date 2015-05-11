@@ -7,6 +7,7 @@ public class DifferentialEquationSystem {
     private static final long MAX_ITERATIONS = 1000;
     private final Function[] functions;
     private final int n;
+
     /**
      * Creates new differential equations system.
      *
