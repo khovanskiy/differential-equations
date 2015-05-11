@@ -5,7 +5,18 @@ import java.util.Arrays;
 public class EquationSystem {
 
     private final static double GRADIENT_DESCENT_PRECISION = 1e-6;
+    private Function[] functions;
+    private int n;
 
+    /**
+     * Creates new equation system.
+     *
+     * @param functions functions that return 0 on the answer. Number of functions must be equal to the functions arity.
+     */
+    public EquationSystem(Function[] functions) {
+        this.functions = functions;
+        n = functions.length;
+    }
 
     /**
      * Finds infinity norm of vector x
@@ -55,19 +66,6 @@ public class EquationSystem {
             }
         }
         return x;
-    }
-
-    private Function[] functions;
-    private int n;
-
-    /**
-     * Creates new equation system.
-     *
-     * @param functions functions that return 0 on the answer. Number of functions must be equal to the functions arity.
-     */
-    public EquationSystem(Function[] functions) {
-        this.functions = functions;
-        n = functions.length;
     }
 
     /**

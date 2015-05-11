@@ -5,37 +5,8 @@ import java.util.Arrays;
 public class DifferentialEquationSystem {
     private static final double EPS = 1e-6;
     private static final long MAX_ITERATIONS = 1000;
-
-    public static enum Method {
-        ExplicitEuler {
-            @Override
-            public String toString() {
-                return "Явный метод Эйлера";
-            }
-        },
-        ImplicitEuler {
-            @Override
-            public String toString() {
-                return "Неявный метод Эйлера";
-            }
-        },
-        ExplicitRungeKutta {
-            @Override
-            public String toString() {
-                return "Явный метод Рунге-Кутты 4 порядка";
-            }
-        },
-        ExplicitAdamsBashfort {
-            @Override
-            public String toString() {
-                return "Явный метод Адамса-Бэшфорта 4 порядка";
-            }
-        },
-    }
-
     private final Function[] functions;
     private final int n;
-
     /**
      * Creates new differential equations system.
      *
@@ -193,5 +164,32 @@ public class DifferentialEquationSystem {
             }
             return result;
         }
+    }
+
+    public static enum Method {
+        ExplicitEuler {
+            @Override
+            public String toString() {
+                return "Явный метод Эйлера";
+            }
+        },
+        ImplicitEuler {
+            @Override
+            public String toString() {
+                return "Неявный метод Эйлера";
+            }
+        },
+        ExplicitRungeKutta {
+            @Override
+            public String toString() {
+                return "Явный метод Рунге-Кутты 4 порядка";
+            }
+        },
+        ExplicitAdamsBashfort {
+            @Override
+            public String toString() {
+                return "Явный метод Адамса-Бэшфорта 4 порядка";
+            }
+        },
     }
 }

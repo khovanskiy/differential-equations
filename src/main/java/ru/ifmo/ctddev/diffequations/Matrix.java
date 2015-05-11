@@ -5,26 +5,9 @@ import java.util.Random;
 public class Matrix {
 
     private static final Random RANDOM = RandomHolder.random;
-
-    private static class InconsistentInputException extends Exception {
-        public InconsistentInputException(String s) {
-            super(s);
-        }
-    }
-
-    private static double scalarProduct(double[] a, double[] b) {
-        double result = 0;
-        for (int i = 0; i < a.length; i++) {
-            result += a[i] * b[i];
-        }
-        return result;
-    }
-
     private int n;
     private double[][] a;
-
     private double norm = -1;
-
     public Matrix(int size) {
         n = size;
         a = new double[n][n];
@@ -33,6 +16,14 @@ public class Matrix {
     public Matrix(double[][] m) {
         n = m.length;
         a = m;
+    }
+
+    private static double scalarProduct(double[] a, double[] b) {
+        double result = 0;
+        for (int i = 0; i < a.length; i++) {
+            result += a[i] * b[i];
+        }
+        return result;
     }
 
     private void solutionsFill(double[] b, int min, int max) {
@@ -352,6 +343,12 @@ public class Matrix {
 
     public double get(int i, int j) {
         return this.a[i][j];
+    }
+
+    private static class InconsistentInputException extends Exception {
+        public InconsistentInputException(String s) {
+            super(s);
+        }
     }
 }
 

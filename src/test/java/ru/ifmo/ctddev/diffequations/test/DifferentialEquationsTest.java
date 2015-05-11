@@ -36,7 +36,12 @@ public class DifferentialEquationsTest {
         System.out.println(DifferentialEquationSystem.Method.ExplicitAdamsBashfort.toString() + ": " + answer[3140][0] + " " + answer[3140][1]);
     }
 
-    public static void checkRBSigma(final double r, final double b, final double sigma, double dt, int iterations) {
+    @Test
+    public void solve1() {
+        //double[][] v = checkRBSigma(0.5, 10, 8.0/3.0, 0.5, 10000);
+    }
+
+    public void checkRBSigma(final double r, final double b, final double sigma, double dt, int iterations) {
         Random random = RandomHolder.random;
         double[] x0 = new double[]{random.nextDouble(), random.nextDouble(), random.nextDouble(), 0};
         Function[] functions = new Function[3];
@@ -65,7 +70,7 @@ public class DifferentialEquationsTest {
         System.out.println(result[iterations - 1][0] + " " + result[iterations - 1][1] + " " + result[iterations - 1][2]);
     }
 
-    public static void getRBSigma(final double r, final double b, final double sigma, double dt, int iterations) {
+    public static double[][] getRBSigma(final double r, final double b, final double sigma, double dt, int iterations) {
         Random random = RandomHolder.random;
         double[] x0 = new double[]{random.nextDouble(), random.nextDouble(), random.nextDouble(), 0};
         Function[] functions = new Function[3];
@@ -88,7 +93,7 @@ public class DifferentialEquationsTest {
             }
         };
         DifferentialEquationSystem differentialEquationSystem = new DifferentialEquationSystem(functions);
-        differentialEquationSystem.solve(DifferentialEquationSystem.Method.ExplicitEuler,
+        return differentialEquationSystem.solve(DifferentialEquationSystem.Method.ExplicitEuler,
                 x0, dt, iterations);
     }
 }
