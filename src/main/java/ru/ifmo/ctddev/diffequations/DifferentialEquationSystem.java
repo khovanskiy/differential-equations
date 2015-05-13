@@ -151,8 +151,8 @@ public class DifferentialEquationSystem {
             double[] cur = new double[n];
             for (int i = 3; i < iterations; i++) {
                 for (int j = 0; j < n; j++) {
-                    cur[j] = tmp[3][j] + (functions[j].calculate(tmp[0]) - 5 * functions[j].calculate(tmp[1])
-                            + 19 * functions[j].calculate(tmp[2]) + 9 * functions[j].calculate(tmp[3])) * dt / 24;
+                    cur[j] = tmp[3][j] + (55 * functions[j].calculate(tmp[3]) - 59 * functions[j].calculate(tmp[2])
+                            + 37 * functions[j].calculate(tmp[1]) - 9 * functions[j].calculate(tmp[0])) * dt / 24;
                 }
                 for (int q = 0; q < 3; q++) {
                     System.arraycopy(tmp[q + 1], 0, tmp[q], 0, n + 1);

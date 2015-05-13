@@ -53,16 +53,17 @@ public class GUIMain extends Application {
     private double b = 8.0 / 3.0;
     private double sigma = 10;
     private double dt = 1e-3;
-    private DifferentialEquationSystem.Method method = DifferentialEquationSystem.Method.ExplicitEuler;
+    private int mode = 0xF;
+    private double[] x0 = new double[] {2, 2, 2, 0};
+    //private DifferentialEquationSystem.Method method = DifferentialEquationSystem.Method.ExplicitEuler;
 
     public static void main(String[] args) {
         Application.launch(args);
     }
 
-    public static double[][] solveSystem(DifferentialEquationSystem.Method method,
+    public double[][] solveSystem(DifferentialEquationSystem.Method method,
             final double r, final double b, final double sigma, double dt, int iterations) {
         Random random = RandomHolder.random;
-        double[] x0 = new double[]{random.nextDouble(), random.nextDouble(), random.nextDouble(), 0};
         Function[] functions = new Function[3];
         functions[0] = new Function() {
             @Override
@@ -110,11 +111,10 @@ public class GUIMain extends Application {
         stage.show();
     }
 
-    private void update() {
-        if (this.points > this.iterations) {
-            this.points = this.iterations;
-        }
-        System.out.println("Solving...");
+    public Scatter createScatter(DifferentialEquationSystem.Method method, double[] x0, Color color) {
+        System.out.println("Solving " + method + ", color = " + color);
+        //Random random = RandomHolder.random;
+        //double[] x0 = new double[]{random.nextDouble(), random.nextDouble(), random.nextDouble(), 0};
         double[][] v = solveSystem(method, r, b, sigma, dt, iterations);
         Coord3d[] points = new Coord3d[this.points];
         int step = iterations / this.points;
@@ -122,11 +122,36 @@ public class GUIMain extends Application {
             points[i] = new Coord3d(v[j][0], v[j][1], v[j][2]);
         }
         System.out.println("Rebuilding...");
+        return new Scatter(points, color);
+    }
 
-        Scatter scatter = new Scatter(points, Color.RED);
+    private void update() {
+        if (this.points > this.iterations) {
+            this.points = this.iterations;
+        }
+
+        Random random = RandomHolder.random;
+        double[] x0 = new double[]{2, 2, 2, 0};
 
         AWTChart chart = (AWTChart) factory.newChart(Quality.Nicest, IChartComponentFactory.Toolkit.offscreen);
-        chart.getScene().add(scatter);
+
+
+        if ((mode & 0x8) != 0) {
+            Scatter scatter = createScatter(DifferentialEquationSystem.Method.ImplicitEuler, x0, Color.RED);
+            chart.getScene().add(scatter);
+        }
+        if ((mode & 0x4) != 0) {
+            Scatter scatter = createScatter(DifferentialEquationSystem.Method.ExplicitEuler, x0, Color.BLUE);
+            chart.getScene().add(scatter);
+        }
+        if ((mode & 0x2) != 0) {
+            Scatter scatter = createScatter(DifferentialEquationSystem.Method.ExplicitRungeKutta, x0, Color.YELLOW);
+            chart.getScene().add(scatter);
+        }
+        if ((mode & 0x1) != 0) {
+            Scatter scatter = createScatter(DifferentialEquationSystem.Method.ExplicitAdamsBashfort, x0, Color.GREEN);
+            chart.getScene().add(scatter);
+        }
 
         Platform.runLater(new Runnable() {
             @Override
@@ -155,6 +180,12 @@ public class GUIMain extends Application {
                         iterations = Math.abs(Integer.parseInt(args[2]));
                     }
                     break;
+                    case "x": {
+                        x0[0] = Double.parseDouble(args[2]);
+                        x0[1] = Double.parseDouble(args[3]);
+                        x0[2] = Double.parseDouble(args[4]);
+                    }
+                    break;
                     case "points":
                     case "pts":
                     case "p": {
@@ -179,7 +210,7 @@ public class GUIMain extends Application {
                         dt = Double.parseDouble(args[2]);
                     }
                     break;
-                    case "method": {
+                    /*case "method": {
                         switch (args[2].toLowerCase()) {
                             case "expliciteuler":
                             case "explicit_euler": {
@@ -203,20 +234,101 @@ public class GUIMain extends Application {
                             break;
                         }
                     }
-                    break;
+                    break;*/
                 }
                 update();
             }
             break;
+            case "a":
+            case "add":
+            {
+                switch (args[1].toLowerCase()) {
+                    case "method": {
+                        switch (args[2].toLowerCase()) {
+                            case "ee":
+                            case "expliciteuler":
+                            case "explicit_euler": {
+                                //method = DifferentialEquationSystem.Method.ExplicitEuler;
+                                mode |= 0x4;
+                            }
+                            break;
+                            case "ie":
+                            case "impliciteuler":
+                            case "implicit_euler": {
+                                //method = DifferentialEquationSystem.Method.ImplicitEuler;
+                                mode |= 0x8;
+                            }
+                            break;
+                            case "erk":
+                            case "explicitrungekutta":
+                            case "explicit_runge_kutta": {
+                                //method = DifferentialEquationSystem.Method.ExplicitRungeKutta;
+                                mode |= 0x2;
+                            }
+                            break;
+                            case "eabf":
+                            case "explicitadamsbashfort":
+                            case "explicit_adams_bashfort": {
+                                //method = DifferentialEquationSystem.Method.ExplicitAdamsBashfort;
+                                mode |= 0x1;
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                }
+                update();
+            } break;
+            case "rm":
+            case "remove":
+            {
+                switch (args[1].toLowerCase()) {
+                    case "method": {
+                        switch (args[2].toLowerCase()) {
+                            case "ee":
+                            case "expliciteuler":
+                            case "explicit_euler": {
+                                //method = DifferentialEquationSystem.Method.ExplicitEuler;
+                                mode &= (0xF - 0x4);
+                            }
+                            break;
+                            case "ie":
+                            case "impliciteuler":
+                            case "implicit_euler": {
+                                //method = DifferentialEquationSystem.Method.ImplicitEuler;
+                                mode &= (0xF - 0x8);
+                            }
+                            break;
+                            case "erk":
+                            case "explicitrungekutta":
+                            case "explicit_runge_kutta": {
+                                //method = DifferentialEquationSystem.Method.ExplicitRungeKutta;
+                                mode &= (0xF - 0x2);
+                            }
+                            break;
+                            case "eabf":
+                            case "explicitadamsbashfort":
+                            case "explicit_adams_bashfort": {
+                                //method = DifferentialEquationSystem.Method.ExplicitAdamsBashfort;
+                                mode &= (0xF - 0x1);
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                }
+                update();
+            } break;
             case "verbose":
             case "info":
             case "v": {
-                System.out.println("R = " + r);
-                System.out.println("Sigma = " + sigma);
+                System.out.println("r = " + r);
+                System.out.println("b = " + b);
+                System.out.println("sigma = " + sigma);
                 System.out.println("dt = " + dt);
                 System.out.println("Iterations = " + iterations);
                 System.out.println("Points = " + points);
-                System.out.println("Method = " + method.toString());
+                System.out.println("Method = " + mode);
             }
             break;
             case "render":
